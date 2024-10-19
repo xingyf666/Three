@@ -1,0 +1,40 @@
+cmake_minimum_required(VERSION 3.27)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+project(three VERSION 1.0.0 LANGUAGES CXX)
+
+add_executable(${PROJECT_NAME} main.cpp glad.c)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+set(glfw3_DIR "D:/lib/GLFW/lib/cmake/glfw3")
+find_package(glfw3 REQUIRED)
+
+set(glm_DIR "D:/lib/glm/cmake/glm")
+find_package(glm REQUIRED)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE opengl32.lib glfw)
+target_link_libraries(${PROJECT_NAME} PRIVATE glm::glm)
+
+set(BINARY_DIR ${PROJECT_BINARY_DIR})
+
+set(OUTPUT_DIR
+    "$<$<CONFIG:Debug>:"
+    "${BINARY_DIR}/Debug"
+    ">"
+    "$<$<CONFIG:Release>:"
+    "${BINARY_DIR}/Release"
+    ">"
+    "$<$<CONFIG:RelWithDebInfo>:"
+    "${BINARY_DIR}/RelWithDebInfo"
+    ">")
+string(REPLACE ";" " " OUTPUT_DIR ${OUTPUT_DIR})
+
+file(GLOB DEPS_DLL CONFIGURE_DEPENDS "D:/lib/GLFW/bin/*.dll")
+
+add_custom_command(
+  TARGET ${PROJECT_NAME}
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy ${DEPS_DLL} ${OUTPUT_DIR})
