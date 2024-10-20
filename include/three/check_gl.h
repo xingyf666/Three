@@ -21,7 +21,7 @@ __declspec(noinline) std::string opengl_errno_name(int err)
         PRE_GL_ERROR(OUT_OF_MEMORY)
 #undef PRE_GL_ERROR
     }
-    return "Unknown error" + std::to_string(err);
+    return "Unknown error";
 }
 
 void check_gl_error(const char *filename, int lineno, const char *expr)
